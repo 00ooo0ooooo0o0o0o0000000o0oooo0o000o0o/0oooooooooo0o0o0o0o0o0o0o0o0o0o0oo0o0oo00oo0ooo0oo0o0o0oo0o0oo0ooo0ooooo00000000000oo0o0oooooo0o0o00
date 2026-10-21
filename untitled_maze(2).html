@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>untitled</title>
+</head>
+<body>
+<script>
+const sites = [
+
+];
+
+const chars = [
+  "ø", "æ", "þ", "ð", "Ж", "ж", "Я", "ф", "א", "ש", "م", "ن",
+  "█", "░", "▒", "▓", "※", "〄", "⌘", "⌬", "⟁", "⧖", "⸸", "⛧",
+  "☷", "♜", "♢", "♧", "♨", "☍", "⍟", "⎔", "ꙮ", "҉", "𖤐", "𓂀",
+  "∴", "∵", "⊹", "⊗", "⫷", "⫸", "ᚠ", "ᚱ", "ᛟ", "ᛉ", "⸘", "¿"
+];
+
+const words = [
+  "ng", "inx", "r", "lst", "mir", "page", "dsda", "entsdary",
+  "dr", "arive", "snal", "or", "g", "unk", "stopo", "elere",
+  "not alli", "on", "ce", "wy", "lok", "r", "forgen", "40"
+];
+
+function rand(n) {
+  return Math.floor(Math.random() * n);
+}
+function pick(a) {
+  return a[rand(a.length)];
+}
+function randomString() {
+  const pool = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-=+~^";
+  let out = "";
+  const len = 2 + rand(100);
+  for (let i = 0; i < len; i++) out += pool[rand(pool.length)];
+  return out;
+}
+function internalUrl() {
+  return "?p=" + Array.from({length: 8 + rand(18)}, () =>
+    "abcdefghijklmnopqrstuvwxyz0123456789"[rand(36)]
+  ).join("");
+}
+function addText(text) {
+  document.body.appendChild(document.createTextNode(text));
+}
+function addBreak() {
+  document.body.appendChild(document.createElement("br"));
+}
+function addInternalLink(label) {
+  const a = document.createElement("a");
+  a.href = internalUrl();
+  a.textContent = label;
+  document.body.appendChild(a);
+}
+function addExternalLink() {
+  const [url, label] = pick(sites);
+  const a = document.createElement("a");
+  a.href = url;
+  a.textContent = Math.random() < 0.5 ? label : randomString();
+  a.target = "_blank";
+  a.rel = "noopener noreferrer";
+  document.body.appendChild(a);
+}
+function addButton() {
+  const button = document.createElement("button");
+  button.textContent = pick(["continue", "open", "next", "enter", "?", "go", "leave", "reload"]);
+  button.onclick = () => location.href = internalUrl();
+  document.body.appendChild(button);
+}
+function addOddLink() {
+  const label = Math.random() < 0.5 ? pick(chars) + pick(chars) + pick(chars) : randomString();
+  addInternalLink(label);
+}
+
+document.title = Math.random() < 0.35 ? " " : pick(["untitled", "index", " ", "page", "null", ""]);
+const params = new URLSearchParams(location.search);
+const pageId = params.get("p");
+
+// Rare page: every character is one blue link to another generated page.
+if (Math.random() < 0.10) {
+  const rare = document.createElement("a");
+  rare.href = internalUrl();
+  rare.textContent = "жжжжжжжжжжжжжжжжжжжжжжжжжжжжжжжжжжж";
+  document.body.appendChild(rare);
+} else {
+  if (pageId) {
+    document.body.appendChild(document.createTextNode("[" + pageId + "]"));
+    addBreak();
+    if (Math.random() < 0.65) {
+      addText(pick(["you are here", "you came back", "this is not the same page", "there is no page", "keep going", "don't close this", "why did you click that", ""]));
+      addBreak();
+    }
+  }
+
+  const count = 18 + rand(75);
+  for (let i = 0; i < count; i++) {
+  const kind = rand(100);
+  if (kind < 39) {
+    addText(randomString());
+  } else if (kind < 53) {
+    addText(pick(chars).repeat(1 + rand(15)));
+  } else if (kind < 69) {
+    addText(pick(words));
+  } else if (kind < 80) {
+    addOddLink();
+  } else if (kind < 87) {
+    addInternalLink(pick(words));
+  } else if (kind < 92) {
+    addExternalLink();
+  } else {
+    addButton();
+  }
+
+    if (Math.random() < 0.76) addText(" ".repeat(1 + rand(12)));
+    if (Math.random() < 0.29) addBreak();
+  }
+  addBreak();
+  addBreak();
+  if (Math.random() < 0.8) addInternalLink(pick(["again", "back", "continue", "next", "?", "home", "return", ""]));
+  if (Math.random() < 0.45) {
+    addText(" ");
+    addExternalLink();
+  }
+}
+</script>
+<noscript>This page needs JavaScript enabled.</noscript>
+</body>
+</html>
